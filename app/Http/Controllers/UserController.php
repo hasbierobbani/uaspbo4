@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\sysmenu;
 use App\sysuser;
+use App\data_menu;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -46,7 +47,10 @@ class UserController extends Controller
         $user->uname = $request->txtuname;
         $user->upass = $request->txtupass;
         $user->save();
-        return view('master.user');
+        $categories = sysmenu::where('sysmenu_id', '=', '0')
+        ->with('childrenCategories')
+        ->get();
+        return view('master.user' , ['data_menu' => $categories]);
     }
 
     public function edit(Request $request)
@@ -71,6 +75,9 @@ class UserController extends Controller
                 'uname' => $request->txtuname,
                 'upass' => $request->txtupass,
             ]);
-        return view('master.user');
+            $categories = sysmenu::where('sysmenu_id', '=', '0')
+        ->with('childrenCategories')
+        ->get();
+        return view('master.user' , ['data_menu' => $categories]);
     }
 }
